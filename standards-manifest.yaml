@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "release": "0.1.0",
+  "standards": {
+    "architecture": "standards/architecture.md",
+    "dependencies": "standards/dependencies.md",
+    "documentation": "standards/documentation.md",
+    "dotnet": "standards/dotnet.md",
+    "embedded": "standards/embedded.md",
+    "general": "standards/general.md",
+    "git": "standards/git.md",
+    "kicad": "standards/kicad.md",
+    "pcb-design": "standards/pcb-design.md",
+    "python": "standards/python.md",
+    "security": "standards/security.md",
+    "testing": "standards/testing.md"
+  },
+  "workflows": {
+    "code-review": "workflows/code-review.md",
+    "defect-investigation": "workflows/defect-investigation.md",
+    "dependency-update": "workflows/dependency-update.md",
+    "ef-migration": "workflows/ef-migration.md",
+    "feature-development": "workflows/feature-development.md",
+    "pcbway-release": "workflows/pcbway-release.md",
+    "release": "workflows/release.md"
+  },
+  "skills": {
+    "sb-dotnet-engineering": "skills/sb-dotnet-engineering/SKILL.md",
+    "sb-kicad-engineering": "skills/sb-kicad-engineering/SKILL.md",
+    "sb-repository-maintenance": "skills/sb-repository-maintenance/SKILL.md"
+  },
+  "templates": [
+    "templates/.github/copilot-instructions.md",
+    "templates/.github/instructions/database.instructions.md",
+    "templates/.github/instructions/dotnet.instructions.md",
+    "templates/.github/instructions/tests.instructions.md",
+    "templates/.github/prompts/investigate-bug.prompt.md",
+    "templates/.github/prompts/review-pr.prompt.md",
+    "templates/AGENTS.md",
+    "templates/CLAUDE.md",
+    "templates/DEVELOPING.md",
+    "templates/repository-bootstrap/.agent/VERSION",
+    "templates/repository-bootstrap/.agent/manifest.yaml",
+    "templates/repository-bootstrap/README.md"
+  ],
+  "synchronized": [
+    "standards/",
+    "workflows/",
+    "skills/",
+    "VERSION",
+    "sync-state.json"
+  ],
+  "locally_owned": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "DEVELOPING.md",
+    ".github/",
+    ".agent/manifest.yaml",
+    "docs/",
+    "src/",
+    "tests/"
+  ]
+}

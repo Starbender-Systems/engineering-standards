@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "release": "0.1.0",
+  "standards": [
+    "architecture",
+    "dependencies",
+    "documentation",
+    "dotnet",
+    "embedded",
+    "general",
+    "git",
+    "kicad",
+    "pcb-design",
+    "python",
+    "security",
+    "testing"
+  ],
+  "workflows": [
+    "code-review",
+    "defect-investigation",
+    "dependency-update",
+    "ef-migration",
+    "feature-development",
+    "pcbway-release",
+    "release"
+  ],
+  "skills": [
+    "sb-dotnet-engineering",
+    "sb-kicad-engineering",
+    "sb-repository-maintenance"
+  ],
+  "synchronized": [
+    "standards/",
+    "workflows/",
+    "skills/",
+    "VERSION",
+    "sync-state.json"
+  ]
+}
