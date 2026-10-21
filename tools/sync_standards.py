@@ -39,14 +39,8 @@ def atomic_write(path: Path, data: bytes) -> None:
             os.unlink(name)
 
 
-def synchronize(source: Path, consumer: Path, check: bool = False) -> int:
-    source, consumer = source.resolve(), consumer.resolve()
-    require(consumer.is_dir(), f"Consumer repository does not exist: {consumer}")
-    require(not consumer.is_relative_to(source) and not source.is_relative_to(consumer),
-            "Source and consumer repositories must not overlap")
-    catalog = load_catalog(source)
-    agent = safe_path(consumer, ".agent")
-    manifest = load_consumer(safe_path(consumer, ".agent/manifest.yaml"), catalog)
+def snapshot_files(source: Path, catalog: dict, manifest: dict) -> dict[str, bytes]:
+    """Build the exact shared snapshot for synchronization or initial repository bootstrap."""
     desired = {path: safe_path(source, path).read_bytes()
                for path in selected_files(source, catalog, manifest)}
     desired["VERSION"] = (catalog["release"] + "\n").encode()
@@ -57,6 +51,18 @@ def synchronize(source: Path, consumer: Path, check: bool = False) -> int:
         "files": {path: digest(data) for path, data in sorted(desired.items())},
     }
     desired["sync-state.json"] = (json.dumps(state, indent=2, sort_keys=True) + "\n").encode()
+    return desired
+
+
+def synchronize(source: Path, consumer: Path, check: bool = False) -> int:
+    source, consumer = source.resolve(), consumer.resolve()
+    require(consumer.is_dir(), f"Consumer repository does not exist: {consumer}")
+    require(not consumer.is_relative_to(source) and not source.is_relative_to(consumer),
+            "Source and consumer repositories must not overlap")
+    catalog = load_catalog(source)
+    agent = safe_path(consumer, ".agent")
+    manifest = load_consumer(safe_path(consumer, ".agent/manifest.yaml"), catalog)
+    desired = snapshot_files(source, catalog, manifest)
     state_path = safe_path(consumer, ".agent/sync-state.json")
     previous = {}
     if state_path.exists():

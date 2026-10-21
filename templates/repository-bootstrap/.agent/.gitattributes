@@ -1,0 +1,2 @@
+# Keep pinned snapshot bytes and their SHA-256 hashes stable across Git checkouts.
+** -text

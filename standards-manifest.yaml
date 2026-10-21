@@ -50,6 +50,7 @@
     "templates/library-consumer/plugins/library-consumer/plugin.json",
     "templates/library-consumer/plugins/library-consumer/skills/library-consumer/SKILL.md",
     "templates/repository-bootstrap/.agent/VERSION",
+    "templates/repository-bootstrap/.agent/.gitattributes",
     "templates/repository-bootstrap/.agent/manifest.yaml",
     "templates/repository-bootstrap/README.md"
   ],
@@ -66,6 +67,7 @@
     "DEVELOPING.md",
     ".github/",
     ".agent/manifest.yaml",
+    ".agent/.gitattributes",
     "docs/",
     "src/",
     "tests/"

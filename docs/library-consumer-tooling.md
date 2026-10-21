@@ -6,7 +6,15 @@ The design follows the separation used by the SharedPackages consumer tooling: c
 
 ## Bootstrap a new library
 
-First adopt the ordinary [repository bootstrap](../templates/repository-bootstrap/README.md), selecting the standards relevant to the library. Then run from this standards checkout, substituting the library's real identity:
+The root [bootstrap command](../bootstrap.py) installs the complete common [repository setup](../templates/repository-bootstrap/README.md) plus the library consumer tooling. From this standards checkout, substitute an existing target directory and the library's real identity:
+
+```text
+python bootstrap.py ../example-library --type library --name example-library --display-name "Example Library" --repository https://github.com/example/example-library
+```
+
+It accepts `--check`, `--library-ref` (default `HEAD`), and `--plugin-version` (default `0.1.0`). All common and library files are preflighted together before any write.
+
+If the library already has a customized common baseline, the existing add-on-only command remains available:
 
 ```text
 python tools/bootstrap_library.py ../example-library --name example-library --display-name "Example Library" --repository https://github.com/example/example-library --library-ref HEAD --check
