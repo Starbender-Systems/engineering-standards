@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "{{plugin_name}}",
+  "version": "{{plugin_version}}",
+  "description": "Discover and integrate {{library_name}} capabilities in consuming applications.",
+  "repository": "{{repository}}",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "{{library_name}} Consumer",
+        "shortDescription": "Find and integrate existing library capabilities",
+        "category": "Productivity"
+      }
+    }
+  }
+}

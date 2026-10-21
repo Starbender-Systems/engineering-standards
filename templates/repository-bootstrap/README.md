@@ -37,3 +37,9 @@ application-repo/
 Commit the exact pin, manifest, content, and hashes to retain reproducible instruction inputs. Record the source commit in the PR. A pin cannot make model outputs deterministic. Restore the complete prior snapshot to recover previous guidance.
 
 When narrowing selections, transitive shared links are included automatically. Remove unused local adapter templates or update their links to match what the repository uses.
+
+## Optional library profile
+
+For libraries that want coding agents to discover and use their APIs, follow the [library consumer tooling guide](../../docs/library-consumer-tooling.md) after the snapshot steps above. `tools/bootstrap_library.py` adds a locally owned consumer catalog, portable plugin/skill, validation workflow, and standalone validation/bundle tool. Supply the library's own name, repository URL, and Git ref; populate real package versions and capability routes before a release bundle.
+
+This profile does not modify the shared snapshot or replace existing instructions. It rejects conflicting local files before writing; use a disposable sibling directory to render templates for a manual merge when the library already has a marketplace or consumer tooling.

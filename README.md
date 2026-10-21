@@ -56,6 +56,10 @@ Use a Python 3.11+ executable; on Windows, `py -3.12` is an example if `python` 
 
 The consumer manifest's release must exactly match the local checkout. Selection includes transitive dependencies expressed by relative Markdown links in shared content, so linked standards and workflows remain usable offline. Select only needed adapter/path templates and adjust their links if narrowing the snapshot.
 
+### Optional library consumer tooling
+
+Libraries can add a consumer catalog, integration skill/plugin, validation workflow, and standalone packaging tool with [the library bootstrap](docs/library-consumer-tooling.md). After ordinary snapshot adoption, run `python tools/bootstrap_library.py --help` and supply the library identity and intended Git ref. Generated files are locally owned; standards sync does not install, overwrite, or publish a plugin. Existing consumers need no manifest changes. The starter catalog is empty until maintainers document actual library capabilities.
+
 ## Manifest contract and ownership
 
 Both `.yaml` manifests use **JSON-form YAML (the JSON subset of YAML 1.2)**: quoted keys and strings, arrays and objects, no comments, anchors, custom tags, or block-style YAML. This deliberate subset allows unambiguous parsing with Python's standard library. Unsupported syntax, duplicate keys, unknown keys/identifiers, and version mismatches fail with an error.
