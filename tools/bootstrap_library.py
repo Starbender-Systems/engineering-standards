@@ -57,14 +57,8 @@ def render_profile(source: Path, name: str, display_name: str, repository: str,
     return files
 
 
-def bootstrap(source: Path, consumer: Path, name: str, display_name: str, repository: str,
-              library_ref: str, plugin_version: str = "0.1.0", check: bool = False) -> int:
-    source = source.resolve()
-    consumer = absolute_path(consumer)
-    require(consumer.is_dir(), f"Library repository does not exist: {consumer}")
-    require(not consumer.is_relative_to(source) and not source.is_relative_to(consumer),
-            "Standards source and library repository must not overlap")
-    files = render_profile(source, name, display_name, repository, library_ref, plugin_version)
+def plan_additions(consumer: Path, files: dict[str, bytes]) -> list[str]:
+    """Preflight the complete composed bootstrap without changing existing local files."""
     additions = []
     # Preflight every destination before writing any file. Identical reruns preserve timestamps.
     for path, data in sorted(files.items()):
@@ -78,16 +72,32 @@ def bootstrap(source: Path, consumer: Path, name: str, display_name: str, reposi
             require(not parent.exists() or parent.is_dir(), f"Expected directory: {parent}")
         if not target.exists():
             additions.append(path)
-    for path in additions:
-        print(f"ADD {path}")
-    if check:
-        print("Bootstrap files missing." if additions else "Bootstrap matches; no changes.")
-        return 1 if additions else 0
+    return additions
+
+
+def write_additions(consumer: Path, files: dict[str, bytes], additions: list[str]) -> None:
     for path in additions:
         target = consumer / path
         target.parent.mkdir(parents=True, exist_ok=True)
         with target.open("xb") as handle:
             handle.write(files[path])
+
+
+def bootstrap(source: Path, consumer: Path, name: str, display_name: str, repository: str,
+              library_ref: str, plugin_version: str = "0.1.0", check: bool = False) -> int:
+    source = source.resolve()
+    consumer = absolute_path(consumer)
+    require(consumer.is_dir(), f"Library repository does not exist: {consumer}")
+    require(not consumer.is_relative_to(source) and not source.is_relative_to(consumer),
+            "Standards source and library repository must not overlap")
+    files = render_profile(source, name, display_name, repository, library_ref, plugin_version)
+    additions = plan_additions(consumer, files)
+    for path in additions:
+        print(f"ADD {path}")
+    if check:
+        print("Bootstrap files missing." if additions else "Bootstrap matches; no changes.")
+        return 1 if additions else 0
+    write_additions(consumer, files, additions)
     print(f"Library consumer tooling: {len(additions)} file(s) added.")
     return 0
 

@@ -39,10 +39,25 @@ A consumer commits its request manifest, exact VERSION, copied content, and gene
 
 ## Adopt a snapshot
 
-See the [bootstrap guide](templates/repository-bootstrap/README.md) for the consumer layout and copy steps.
+Use the root [bootstrap command](bootstrap.py) from this checkout to install the common setup into an existing target repository:
+
+```text
+python bootstrap.py ../application-repo
+python bootstrap.py ../application-repo --check
+```
+
+Every repository type receives the same agent adapters, development guide, manifest/pin, and complete shared snapshot. The default type is `repository`; libraries add the consumer tooling in the same command:
+
+```text
+python bootstrap.py ../example-library --type library --name example-library --display-name "Example Library" --repository https://github.com/example/example-library
+```
+
+Library metadata accepts `--library-ref` (default `HEAD`) and `--plugin-version` (default `0.1.0`). All planned common and type-specific files are checked before writing. Identical files remain untouched; conflicting files require a manual merge. `--check` is read-only and returns 1 for missing files, 2 for conflicts or invalid input. After customizing local instructions, use standards synchronization and the consumer validator for ongoing checks.
+
+See the [bootstrap guide](templates/repository-bootstrap/README.md) for the full layout, customization steps, and manual adoption when existing local instructions need merging. The equivalent manual process is:
 
 1. Obtain a reviewed local checkout of the intended standards release. No network downloads occur in the tools.
-2. In the consumer, copy the bootstrap `.agent/manifest.yaml` and `.agent/VERSION`. Copy or merge the adapter templates and `DEVELOPING.md` without replacing existing local work.
+2. In the consumer, copy the bootstrap `.agent/manifest.yaml`, `.agent/VERSION`, and `.agent/.gitattributes`. Copy or merge the adapter templates and `DEVELOPING.md` without replacing existing local work.
 3. Fill in application commands and constraints. Select content identifiers in the manifest; the example selects all available content.
 4. Run from the standards checkout (replace the example consumer path):
 
@@ -58,7 +73,7 @@ The consumer manifest's release must exactly match the local checkout. Selection
 
 ### Optional library consumer tooling
 
-Libraries can add a consumer catalog, integration skill/plugin, validation workflow, and standalone packaging tool with [the library bootstrap](docs/library-consumer-tooling.md). After ordinary snapshot adoption, run `python tools/bootstrap_library.py --help` and supply the library identity and intended Git ref. Generated files are locally owned; standards sync does not install, overwrite, or publish a plugin. Existing consumers need no manifest changes. The starter catalog is empty until maintainers document actual library capabilities.
+Use `bootstrap.py --type library` as above for the common setup plus a consumer catalog, integration skill/plugin, validation workflow, and standalone packaging tool. For a library that already has customized baseline instructions, [the library tooling guide](docs/library-consumer-tooling.md) also documents the add-on-only `tools/bootstrap_library.py` command. Generated files are locally owned; standards sync does not install, overwrite, or publish a plugin. Existing consumers need no manifest changes. The starter catalog is empty until maintainers document actual library capabilities.
 
 ## Manifest contract and ownership
 
@@ -68,7 +83,7 @@ The source catalog lists schema/release versions, available identifiers and path
 
 Synchronized paths are relative to `.agent/`: `standards/`, `workflows/`, `skills/`, `VERSION`, and `sync-state.json`. The consumer must explicitly declare every scope needed by its selection and dependency closure, including both metadata files. The tool refuses any other write scope. It never copies adapters or changes `.agent/manifest.yaml`.
 
-Locally owned files include `AGENTS.md`, `CLAUDE.md`, `DEVELOPING.md`, `.github/`, `.agent/manifest.yaml`, and application architecture and constraints. All files outside the declared shared paths remain untouched. Do not edit shared snapshot files; propose changes upstream or document local constraints in local instructions.
+Locally owned files include `AGENTS.md`, `CLAUDE.md`, `DEVELOPING.md`, `.github/`, `.agent/manifest.yaml`, `.agent/.gitattributes`, and application architecture and constraints. All files outside the declared shared paths remain untouched. Do not edit shared snapshot files; propose changes upstream or document local constraints in local instructions.
 
 Synchronization compares bytes, writes only differences, and emits sorted changes without timestamps. It records file hashes in `sync-state.json`. Previously tracked files no longer selected are removed only if their hashes are unchanged. Modified stale files and unknown files in shared directories produce errors and are preserved. Existing selected shared files can be restored from the source by synchronization; inspect or commit local changes first. Symlinks/reparse points and traversal paths are rejected.
 

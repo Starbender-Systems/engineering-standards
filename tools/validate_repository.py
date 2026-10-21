@@ -30,6 +30,7 @@ REQUIRED_TEMPLATES = (
     ".github/instructions/database.instructions.md", ".github/prompts/review-pr.prompt.md",
     ".github/prompts/investigate-bug.prompt.md", "repository-bootstrap/.agent/VERSION",
     "repository-bootstrap/.agent/manifest.yaml", "repository-bootstrap/README.md",
+    "repository-bootstrap/.agent/.gitattributes",
     "library-consumer/.agents/plugins/marketplace.json",
     "library-consumer/.github/workflows/consumer-tooling.yml",
     "library-consumer/docs/consumers/catalog.json",
@@ -47,6 +48,7 @@ REQUIRED_FILES = (
     "tools/_standards.py", ".github/CODEOWNERS", ".github/pull_request_template.md",
     ".github/workflows/validate.yml",
     "tools/bootstrap_library.py", "tools/consumer_tooling.py", "docs/library-consumer-tooling.md",
+    "bootstrap.py", "tools/bootstrap_repository.py",
 )
 IGNORED = {".git", ".venv", "__pycache__"}
 

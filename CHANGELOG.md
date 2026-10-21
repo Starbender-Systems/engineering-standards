@@ -4,6 +4,8 @@ Guidance releases follow the [versioning policy](README.md#versioning): patches 
 
 ## Unreleased
 
+- Add root `bootstrap.py` with a common repository setup and a library type that composes the common setup with consumer tooling; preflight the complete plan before writing and support read-only checks and identical reruns.
+- Share snapshot rendering with synchronization and preserve snapshot bytes through a locally owned bootstrap `.agent/.gitattributes` file.
 - Add an optional library-consumer bootstrap profile with locally owned discovery catalogs, integration recipe guidance, portable plugin/skill metadata, and a preview CI workflow.
 - Add Python standard-library tooling for conflict-safe bootstrap, catalog and bundled-link validation, optional API inventory checks, and deterministic ZIPs with Git provenance and checksums.
 - Cover bootstrap ownership, idempotence, malformed input, unsafe paths, bundle relocation, inventory compatibility, and release/preview boundaries with disposable-library tests.
