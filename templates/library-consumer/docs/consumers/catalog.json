@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "library": {
+    "name": "{{library_name}}",
+    "repository": "{{repository}}",
+    "ref": "{{library_ref}}"
+  },
+  "plugin": "{{plugin_name}}",
+  "packages": [],
+  "capabilities": []
+}

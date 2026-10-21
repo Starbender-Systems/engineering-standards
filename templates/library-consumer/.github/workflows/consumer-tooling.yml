@@ -1,0 +1,34 @@
+name: Validate consumer tooling
+
+on:
+  pull_request:
+    paths:
+      - 'docs/consumers/**'
+      - 'plugins/**'
+      - '.agents/plugins/marketplace.json'
+      - 'tools/consumer_tooling.py'
+      - '.github/workflows/consumer-tooling.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate catalog and portable links
+        run: python tools/consumer_tooling.py validate .
+      - name: Assemble review preview
+        run: python tools/consumer_tooling.py bundle . --output "${{ runner.temp }}/consumer-tooling" --allow-dirty-preview
+      - uses: actions/upload-artifact@v4
+        with:
+          name: '{{plugin_name}}-preview'
+          path: '${{ runner.temp }}/consumer-tooling/'
+          if-no-files-found: error

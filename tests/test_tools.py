@@ -229,6 +229,8 @@ class ToolTests(unittest.TestCase):
             ("skills/sb-dotnet-engineering/SKILL.md", "# Skill\n", "missing front matter"),
             ("templates/CLAUDE.md", "[missing](.agent/standards/missing.md)\n", "broken relative link"),
             ("templates/CLAUDE.md", "Read `.agent/standards/missing.md`.\n", "broken relative link"),
+            ("templates/library-consumer/docs/consumers/index.md", "[missing](missing.md)\n", "nonportable local link"),
+            ("templates/library-consumer/plugins/library-consumer/plugin.json", '{"name":"other"}', "Plugin schema/name"),
             ("README.md", "[broken](standards/general.md#missing-anchor)\n", "missing Markdown anchor"),
             ("README.md", "[example][ref]\n\n[ref]: absent.md\n", "broken relative link"),
             ("README.md", "<!-- authority: standard.general -->\n", "Duplicate authority"),

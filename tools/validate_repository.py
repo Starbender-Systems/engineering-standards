@@ -8,6 +8,9 @@ import re
 import sys
 from pathlib import Path
 
+from bootstrap_library import render_profile
+from consumer_tooling import ToolingError
+
 from _standards import (
     GROUPS, SKILL_HEADINGS, STANDARD_HEADINGS, WORKFLOW_HEADINGS, StandardsError,
     load_catalog, load_consumer, local_link, markdown_links, prose, require,
@@ -27,12 +30,23 @@ REQUIRED_TEMPLATES = (
     ".github/instructions/database.instructions.md", ".github/prompts/review-pr.prompt.md",
     ".github/prompts/investigate-bug.prompt.md", "repository-bootstrap/.agent/VERSION",
     "repository-bootstrap/.agent/manifest.yaml", "repository-bootstrap/README.md",
+    "library-consumer/.agents/plugins/marketplace.json",
+    "library-consumer/.github/workflows/consumer-tooling.yml",
+    "library-consumer/docs/consumers/catalog.json",
+    "library-consumer/docs/consumers/index.md",
+    "library-consumer/docs/consumers/adoption.md",
+    "library-consumer/docs/consumers/packages.md",
+    "library-consumer/docs/consumers/maintenance.md",
+    "library-consumer/docs/consumers/recipes/README.md",
+    "library-consumer/plugins/library-consumer/plugin.json",
+    "library-consumer/plugins/library-consumer/skills/library-consumer/SKILL.md",
 )
 REQUIRED_FILES = (
     "README.md", "AGENTS.md", "CONTRIBUTING.md", "CHANGELOG.md", "VERSION",
     "standards-manifest.yaml", "tools/sync_standards.py", "tools/validate_repository.py",
     "tools/_standards.py", ".github/CODEOWNERS", ".github/pull_request_template.md",
     ".github/workflows/validate.yml",
+    "tools/bootstrap_library.py", "tools/consumer_tooling.py", "docs/library-consumer-tooling.md",
 )
 IGNORED = {".git", ".venv", "__pycache__"}
 
@@ -102,7 +116,9 @@ def validate(root: Path) -> list[str]:
         check(actual_templates == set(catalog["templates"]), "templates: catalog and file inventory differ")
         folded = [p.casefold() for bundle in shared_files(root, catalog).values() for p in bundle]
         check(len(folded) == len(set(folded)), "Shared paths collide on case-insensitive filesystems")
-    except (StandardsError, OSError, UnicodeError) as exc:
+        # Validate optional profile JSON, identities, and links in its assembled consumer layout.
+        render_profile(root, "example-library", "Example Library", "https://example.com/library", "HEAD")
+    except (StandardsError, ToolingError, OSError, UnicodeError) as exc:
         errors.append(str(exc))
         return sorted(set(errors))
 
@@ -154,6 +170,9 @@ def validate(root: Path) -> list[str]:
             virtual[path.removeprefix("templates/")] = root / path
 
     for path, text in sorted(documents.items()):
+        if path.startswith("templates/library-consumer/"):
+            # These links were checked by render_profile, including bundled references/ mapping.
+            continue
         is_adapter = path.startswith("templates/") and not path.startswith("templates/repository-bootstrap/")
         origin = path.removeprefix("templates/") if is_adapter else path
         links = markdown_links(text)
