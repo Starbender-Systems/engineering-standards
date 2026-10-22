@@ -23,6 +23,8 @@ Native automatic discovery varies by agent and interface. `.agent/skills/` is a 
 
 For C# work, the [.NET standard](standards/dotnet.md) routes to [C# conventions](standards/csharp.md) covering readable style, naming, API design, nullability, dependencies, async code, exceptions, collections, and diagnostics. Repository configuration and established style take precedence over suggested defaults.
 
+For Python work, use the [Python standard](standards/python.md) and [Python engineering skill](skills/sb-python-engineering/SKILL.md) for style, typing, interfaces, mutable state, errors, resources, packaging, concurrency, and validation. Supported runtimes, environment/package tools, formatter, type checker, and test framework remain repository-owned choices.
+
 For C++ work, use the [C++ standard](standards/cpp.md) and [C++ engineering skill](skills/sb-cpp-engineering/SKILL.md) for ownership/lifetimes, interfaces, copy/move behavior, headers, error handling, concurrency, and validation. Compiler/language, naming/style, exception/RTTI, and target-resource policies remain repository-owned; the embedded standard also routes C++ firmware to this guidance.
 
 Adapter syntax references, checked during initialization: [Codex instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [VS Code instructions](https://code.visualstudio.com/docs/agent-customization/custom-instructions), and [VS Code prompts](https://code.visualstudio.com/docs/agent-customization/prompt-files). These are maintainer references; agents need no remote fetch to use this repository.

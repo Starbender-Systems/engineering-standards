@@ -23,10 +23,14 @@ REQUIRED_STANDARDS = (
 REQUIRED_WORKFLOWS = (
     "feature-development defect-investigation dependency-update code-review release ef-migration pcbway-release"
 ).split()
-REQUIRED_SKILLS = ("sb-cpp-engineering", "sb-dotnet-engineering", "sb-kicad-engineering", "sb-repository-maintenance")
+REQUIRED_SKILLS = (
+    "sb-cpp-engineering", "sb-dotnet-engineering", "sb-kicad-engineering",
+    "sb-python-engineering", "sb-repository-maintenance",
+)
 REQUIRED_TEMPLATES = (
     "AGENTS.md", "CLAUDE.md", "DEVELOPING.md", ".github/copilot-instructions.md",
     ".github/instructions/cpp.instructions.md",
+    ".github/instructions/python.instructions.md",
     ".github/instructions/dotnet.instructions.md", ".github/instructions/tests.instructions.md",
     ".github/instructions/database.instructions.md", ".github/prompts/review-pr.prompt.md",
     ".github/prompts/investigate-bug.prompt.md", "repository-bootstrap/.agent/VERSION",

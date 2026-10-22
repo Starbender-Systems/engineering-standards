@@ -90,12 +90,20 @@ class ToolTests(unittest.TestCase):
         self.sync("--check")
 
     def test_dependencies_follow_shared_links_without_copying_unrelated_stack(self):
-        self.edit_manifest(standards=["python"], workflows=[], skills=[])
-        self.sync()
-        self.assertTrue((self.consumer / ".agent/standards/testing.md").is_file())
-        self.assertTrue((self.consumer / ".agent/workflows/feature-development.md").is_file())
-        self.assertFalse((self.consumer / ".agent/standards/kicad.md").exists())
-        self.sync("--check")
+        for standards, skills in ((["python"], []), ([], ["sb-python-engineering"])):
+            with self.subTest(standards=standards, skills=skills):
+                self.edit_manifest(standards=standards, workflows=[], skills=skills)
+                self.sync()
+                for path in ("standards/python.md", "skills/sb-python-engineering/SKILL.md"):
+                    self.assertEqual((self.consumer / ".agent" / path).read_bytes(), (ROOT / path).read_bytes())
+                self.assertTrue((self.consumer / ".agent/standards/testing.md").is_file())
+                self.assertTrue((self.consumer / ".agent/workflows/feature-development.md").is_file())
+                for unrelated in ("cpp", "csharp", "dotnet", "embedded", "kicad"):
+                    self.assertFalse((self.consumer / f".agent/standards/{unrelated}.md").exists())
+                before = inventory(self.consumer)
+                self.sync()
+                self.sync("--check")
+                self.assertEqual(inventory(self.consumer), before)
 
     def test_dotnet_routes_include_portable_csharp_guidance(self):
         for standards, skills in ((["dotnet"], []), ([], ["sb-dotnet-engineering"])):
