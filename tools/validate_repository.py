@@ -18,7 +18,7 @@ from _standards import (
 )
 
 REQUIRED_STANDARDS = (
-    "general architecture git documentation security testing dependencies dotnet python embedded kicad pcb-design"
+    "general architecture git documentation security testing dependencies csharp dotnet python embedded kicad pcb-design"
 ).split()
 REQUIRED_WORKFLOWS = (
     "feature-development defect-investigation dependency-update code-review release ef-migration pcbway-release"

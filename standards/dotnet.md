@@ -6,6 +6,8 @@
 
 Repositories using .NET, C#, and related build tooling.
 
+For C# changes, also read the [C# conventions](csharp.md) for naming, style, API design, and implementation patterns.
+
 ## Rules
 
 - MUST use the repository's declared SDK and target frameworks and preserve existing nullable and analyzer settings.

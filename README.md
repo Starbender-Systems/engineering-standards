@@ -21,6 +21,8 @@ Workflow and skill instructions apply when selected for a task and derive their 
 
 Native automatic discovery varies by agent and interface. `.agent/skills/` is a portable content location, not a promise of native skill discovery. Read the selected `SKILL.md` explicitly, or add a locally owned native wrapper that references it. Do not duplicate its rules.
 
+For C# work, the [.NET standard](standards/dotnet.md) routes to [C# conventions](standards/csharp.md) covering readable style, naming, API design, nullability, dependencies, async code, exceptions, collections, and diagnostics. Repository configuration and established style take precedence over suggested defaults.
+
 Adapter syntax references, checked during initialization: [Codex instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [VS Code instructions](https://code.visualstudio.com/docs/agent-customization/custom-instructions), and [VS Code prompts](https://code.visualstudio.com/docs/agent-customization/prompt-files). These are maintainer references; agents need no remote fetch to use this repository.
 
 ## Versioning
