@@ -21,6 +21,7 @@
     "dependency-update": "workflows/dependency-update.md",
     "ef-migration": "workflows/ef-migration.md",
     "feature-development": "workflows/feature-development.md",
+    "github-repository-setup": "workflows/github-repository-setup.md",
     "pcbway-release": "workflows/pcbway-release.md",
     "release": "workflows/release.md"
   },

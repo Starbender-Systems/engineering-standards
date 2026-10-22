@@ -39,6 +39,8 @@ A consumer commits its request manifest, exact VERSION, copied content, and gene
 
 ## Adopt a snapshot
 
+For GitHub hosting configuration, follow the [repository setup workflow](workflows/github-repository-setup.md). It covers server-side settings, protections, Actions, and environments in addition to the local files installed below; project-specific branch/release choices remain locally owned.
+
 Use the root [bootstrap command](bootstrap.py) from this checkout to install the common setup into an existing target repository:
 
 ```text
