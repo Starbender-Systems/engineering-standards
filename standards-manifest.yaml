@@ -31,6 +31,7 @@
     "sb-cpp-engineering": "skills/sb-cpp-engineering/SKILL.md",
     "sb-dotnet-engineering": "skills/sb-dotnet-engineering/SKILL.md",
     "sb-kicad-engineering": "skills/sb-kicad-engineering/SKILL.md",
+    "sb-python-engineering": "skills/sb-python-engineering/SKILL.md",
     "sb-repository-maintenance": "skills/sb-repository-maintenance/SKILL.md"
   },
   "templates": [
@@ -38,6 +39,7 @@
     "templates/.github/instructions/cpp.instructions.md",
     "templates/.github/instructions/database.instructions.md",
     "templates/.github/instructions/dotnet.instructions.md",
+    "templates/.github/instructions/python.instructions.md",
     "templates/.github/instructions/tests.instructions.md",
     "templates/.github/prompts/investigate-bug.prompt.md",
     "templates/.github/prompts/review-pr.prompt.md",
