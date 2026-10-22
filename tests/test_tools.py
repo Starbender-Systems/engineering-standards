@@ -229,16 +229,17 @@ class ToolTests(unittest.TestCase):
     def test_custom_source_release_updates_pin_and_hashes(self):
         self.sync()
         source = self.source_copy()
-        (source / "VERSION").write_text("0.2.0\n", encoding="utf-8")
         catalog_path = source / "standards-manifest.yaml"
         catalog = json.loads(catalog_path.read_text())
-        catalog["release"] = "0.2.0"
+        release = f"{int(catalog['release'].split('.')[0]) + 1}.0.0"
+        (source / "VERSION").write_text(release + "\n", encoding="utf-8")
+        catalog["release"] = release
         catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
         with (source / "standards/general.md").open("a", encoding="utf-8") as handle:
             handle.write("\nUpdated guidance.\n")
-        self.edit_manifest(release="0.2.0")
+        self.edit_manifest(release=release)
         self.sync("--source", source)
-        self.assertEqual((self.consumer / ".agent/VERSION").read_text(), "0.2.0\n")
+        self.assertEqual((self.consumer / ".agent/VERSION").read_text(), release + "\n")
         self.assertIn("Updated guidance", (self.consumer / ".agent/standards/general.md").read_text())
         self.sync("--source", source, "--check")
 
@@ -253,9 +254,10 @@ class ToolTests(unittest.TestCase):
 
     def test_validator_catches_missing_structure_metadata_and_links(self):
         source = self.source_copy()
+        mismatched_release = f"{int((source / 'VERSION').read_text().split('.')[0]) + 1}.0.0\n"
         mutations = (
             ("VERSION", "01.2.3\n", "invalid semantic version"),
-            ("templates/repository-bootstrap/.agent/VERSION", "0.2.0\n", "Bootstrap VERSION"),
+            ("templates/repository-bootstrap/.agent/VERSION", mismatched_release, "Bootstrap VERSION"),
             ("standards/general.md", "# General\n", "missing heading"),
             ("skills/sb-dotnet-engineering/SKILL.md", "# Skill\n", "missing front matter"),
             ("templates/CLAUDE.md", "[missing](.agent/standards/missing.md)\n", "broken relative link"),

@@ -1,6 +1,6 @@
 # engineering-standards
 
-A versioned, vendor-neutral source of engineering guidance for application repositories and AI development agents. Initial release: **0.1.0**.
+A versioned, vendor-neutral source of engineering guidance for application repositories and AI development agents. Current release metadata: **0.2.0**.
 
 ## Shared core and thin adapters
 
@@ -42,6 +42,12 @@ Adapter syntax references, checked during initialization: [Codex instructions](h
 Use this policy even before 1.0. Schema version is separate from the guidance release. Publish immutable version tags only as an authorized release action; an initialized VERSION file does not mean a tag has been published. Update release metadata together. Record migrations for incompatible changes.
 
 A consumer commits its request manifest, exact VERSION, copied content, and generated `sync-state.json` hashes. Keep the source release immutable and record its commit in the update PR. This preserves the exact instruction inputs needed to reproduce previous agent behavior; model versions, tools, and nondeterminism can still affect outputs.
+
+### Upgrading from 0.1.0 to 0.2.0
+
+This minor release adds guidance, repository bootstrap tooling, and optional library consumer plugins; see the [changelog](CHANGELOG.md#020---2026-10-21) for the full scope. The manifest schema remains `1` and synchronized scopes are unchanged. Existing consumers opt in through a reviewed update: obtain the matching 0.2.0 checkout, change `.agent/manifest.yaml`'s `release` to `0.2.0`, then run synchronization, repeat it, and run `--check` as documented below. Synchronization updates `.agent/VERSION` and hashes; existing pins are not changed automatically. Review expanded guidance and linked dependencies, including the new requirement for commit messages to have a title and a nonempty summary body.
+
+Adapters, bootstrap files, and library consumer tooling remain locally owned. Merge relevant template/runtime updates explicitly; standards synchronization does not install or rebuild plugins. Plugin versions remain independent of the standards release. Roll back by restoring the previous committed manifest, snapshot, and any changed local adapters together, then check against the previous source checkout.
 
 ## Adopt a snapshot
 
