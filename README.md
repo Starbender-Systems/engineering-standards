@@ -1,6 +1,6 @@
 # engineering-standards
 
-A versioned, vendor-neutral source of engineering guidance for application repositories and AI development agents. Current release metadata: **0.2.0**.
+A versioned, vendor-neutral source of engineering guidance for application repositories and AI development agents. Current release metadata: **0.3.0**.
 
 ## Shared core and thin adapters
 
@@ -43,6 +43,12 @@ Use this policy even before 1.0. Schema version is separate from the guidance re
 
 A consumer commits its request manifest, exact VERSION, copied content, and generated `sync-state.json` hashes. Keep the source release immutable and record its commit in the update PR. This preserves the exact instruction inputs needed to reproduce previous agent behavior; model versions, tools, and nondeterminism can still affect outputs.
 
+### Upgrading from 0.2.0 to 0.3.0
+
+This minor release adds the [consumer update command](#update-through-a-pull-request). New bootstraps include `tools/update_standards.py`. Existing consumers can copy that standalone helper from the 0.3.0 checkout once and run it from the consumer root, or run `python update.py /path/to/consumer` from the standards checkout. Online updates require Git and an authenticated GitHub CLI; `--source` accepts a clean local checkout for offline updates. Review the diff, run application checks, and commit the update through the consumer's review process.
+
+The manifest schema remains `1`, synchronized scopes and selections are preserved, and existing consumers keep their current pins until explicitly updated. The updater changes the manifest release and managed snapshot only; local adapters, the helper itself, application files, plugin versions, and plugin installations remain locally owned. The manual update process remains supported. See the [0.3.0 changelog](CHANGELOG.md#030---2026-10-22) for validation and recovery behavior.
+
 ### Upgrading from 0.1.0 to 0.2.0
 
 This minor release adds guidance, repository bootstrap tooling, and optional library consumer plugins; see the [changelog](CHANGELOG.md#020---2026-10-21) for the full scope. The manifest schema remains `1` and synchronized scopes are unchanged. Existing consumers opt in through a reviewed update: obtain the matching 0.2.0 checkout, change `.agent/manifest.yaml`'s `release` to `0.2.0`, then run synchronization, repeat it, and run `--check` as documented below. Synchronization updates `.agent/VERSION` and hashes; existing pins are not changed automatically. Review expanded guidance and linked dependencies, including the new requirement for commit messages to have a title and a nonempty summary body.
@@ -70,7 +76,7 @@ Library metadata accepts `--library-ref` (default `HEAD`) and `--plugin-version`
 
 See the [bootstrap guide](templates/repository-bootstrap/README.md) for the full layout, customization steps, and manual adoption when existing local instructions need merging. The equivalent manual process is:
 
-1. Obtain a reviewed local checkout of the intended standards release. No network downloads occur in the tools.
+1. Obtain a reviewed local checkout of the intended standards release. Bootstrap and synchronization use local files without network downloads.
 2. In the consumer, copy the bootstrap `.agent/manifest.yaml`, `.agent/VERSION`, and `.agent/.gitattributes`. Copy or merge the adapter templates and `DEVELOPING.md` without replacing existing local work.
 3. Fill in application commands and constraints. Select content identifiers in the manifest; the example selects all available content.
 4. Run from the standards checkout (replace the example consumer path):
@@ -104,6 +110,25 @@ Synchronization compares bytes, writes only differences, and emits sorted change
 Exit codes: **0** success/no drift, **1** drift in `--check`, **2** invalid input or filesystem error. `--check` never writes. Each replacement is atomic, but a whole update is not transactional: do not run concurrent writers. After interruption, restore the consumer's committed snapshot or rerun against the same checkout after resolving reported conflicts. Review the diff before committing.
 
 ## Update through a pull request
+
+Newly bootstrapped consumers include a standalone update command. Run from the consumer root with Python 3.11+, Git, and an authenticated [GitHub CLI](https://cli.github.com/):
+
+```text
+python tools/update_standards.py
+python tools/update_standards.py --check
+python tools/update_standards.py --version v0.3.0
+```
+
+The default resolves the latest published stable GitHub release, fetches its tagged checkout into a temporary directory, validates the source, updates only the manifest's release field, and synchronizes twice plus a drift check in a staging directory. It preserves existing selections and scopes, then applies the verified snapshot and reports the source commit. It refuses locally modified or missing snapshot files, unknown shared files, unsafe paths, incompatible selections/schemas, and automatic downgrades. Preserve and restore local snapshot edits before updating. `--check` leaves consumer files and modification times unchanged and returns **1** if an update is available, **0** if current; failures return **2**. It still downloads and validates the candidate release.
+
+Existing consumers can copy [tools/update_standards.py](tools/update_standards.py) once into their own `tools/` directory; it has no imports from this repository. Alternatively, run from this standards checkout:
+
+```text
+python update.py ../application-repo
+python update.py ../application-repo --source ../engineering-standards-release
+```
+
+`--source` uses a clean local Git checkout without network access or GitHub CLI. `--repository OWNER/REPO` selects another GitHub source explicitly. The updater is locally owned and does not update itself, adapters, plugins, or application files. It does not commit, push, or open a PR. Review the diff and run application checks before committing. Handled write errors restore files already changed; a process kill or machine failure is not transactional. Restore the prior committed `.agent/` snapshot before retrying an interrupted update, and do not run concurrent writers.
 
 Prepare and review shared changes here first. A consumer update uses a matching reviewed checkout, changes its manifest release/selections, runs sync and `--check`, and updates locally owned adapters only if needed. Open a reviewable PR containing snapshot, manifest, hashes, compatibility notes, and local validation evidence. Do not silently update all consumers.
 

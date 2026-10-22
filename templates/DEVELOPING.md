@@ -21,3 +21,5 @@ TODO: Map maintained paths to owners and instruction files; remove unused stack 
 ## Shared snapshot updates
 
 Use a reviewed local standards checkout matching the intended release, edit [.agent/manifest.yaml](.agent/manifest.yaml), synchronize, check for drift, and submit the snapshot diff for review. Keep shared content unchanged locally; put application-specific constraints here or in applicable local instructions.
+
+For repositories initialized with the update helper, run `python tools/update_standards.py` from this root with Python 3.11+, Git, and an authenticated GitHub CLI to prepare the latest published stable snapshot. Add `--check` to preview or `--source /path/to/clean-standards-checkout` for offline use. Review the diff and run local checks before committing. The helper is locally owned; merge future helper updates explicitly.

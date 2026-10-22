@@ -53,7 +53,7 @@ REQUIRED_FILES = (
     "tools/_standards.py", ".github/CODEOWNERS", ".github/pull_request_template.md",
     ".github/workflows/validate.yml",
     "tools/bootstrap_library.py", "tools/consumer_tooling.py", "docs/library-consumer-tooling.md",
-    "bootstrap.py", "tools/bootstrap_repository.py",
+    "bootstrap.py", "tools/bootstrap_repository.py", "update.py", "tools/update_standards.py",
 )
 IGNORED = {".git", ".venv", "__pycache__"}
 

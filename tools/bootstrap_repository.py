@@ -35,6 +35,7 @@ def render_repository(source: Path, repository_type: str = "repository", *, name
     files.update({p.removeprefix("templates/"): data
                   for p, data in walk_files(source, "templates/.github").items()})
     files.update({f".agent/{p}": data for p, data in snapshot_files(source, catalog, manifest).items()})
+    files["tools/update_standards.py"] = safe_path(source, "tools/update_standards.py").read_bytes()
     if repository_type == "library":
         additions = render_profile(source, name, display_name, repository, library_ref or "HEAD",
                                    plugin_version or "0.1.0")

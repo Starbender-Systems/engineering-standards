@@ -13,7 +13,7 @@ python bootstrap.py ../application-repo
 python bootstrap.py ../application-repo --check
 ```
 
-The default `--type repository` installs this entire common setup: agent adapters, path instructions, prompts, DEVELOPING.md, the request manifest/pin, and the synchronized shared snapshot with its hashes. The bootstrap `.gitattributes` keeps `.agent/` bytes unchanged by Git line-ending conversion, including on Windows.
+The default `--type repository` installs this entire common setup: agent adapters, path instructions, prompts, DEVELOPING.md, the request manifest/pin, the synchronized shared snapshot with its hashes, and the standalone `tools/update_standards.py` command. The bootstrap `.gitattributes` keeps `.agent/` bytes unchanged by Git line-ending conversion, including on Windows.
 
 For a library, the same command also installs the consumer tooling profile:
 
@@ -25,7 +25,9 @@ python bootstrap.py ../example-library --type library --name example-library --d
 
 All common and type-specific destinations are checked before the first write. Existing identical files retain their modification times; conflicting files, unknown files inside shared snapshot directories, and symlinks/reparse points are rejected and preserved. Exit codes are **0** success/no missing files, **1** missing files under `--check`, and **2** conflict, invalid input, or filesystem error. `--check` never writes. The command does not replace the root README, initialize Git, commit, or install a plugin.
 
-After bootstrapping, fill the local TODOs, select the applicable shared guidance, tune instruction globs, and review the diff. The starter selects all shared content so every initial link resolves. This command initializes a repository; use snapshot synchronization for later shared updates and the library consumer validator for customized tooling.
+After bootstrapping, fill the local TODOs, select the applicable shared guidance, tune instruction globs, and review the diff. The starter selects all shared content so every initial link resolves. This command initializes a repository; use the [update command](../../README.md#update-through-a-pull-request) or offline snapshot synchronization for later shared updates and the library consumer validator for customized tooling.
+
+From the consumer root, `python tools/update_standards.py` updates to the latest published stable release using Git and an authenticated GitHub CLI. Add `--check` to preview without changing consumer files, `--version v0.3.0` for a particular release, or `--source /path/to/clean-standards-checkout` for offline use. Existing consumers can copy the standalone script once or run `python update.py /path/to/consumer` from a current standards checkout. Snapshot synchronization does not install or refresh this locally owned helper. Review and commit the resulting changes through the consumer's normal process.
 
 For existing customized files, use a disposable sibling directory to render the scaffold and merge the relevant differences, or follow the manual steps below. Writes use exclusive creation but the whole run is not transactional; after interruption rerun the same command against the same source checkout and resolve reported conflicts.
 
@@ -46,6 +48,8 @@ application-repo/
   AGENTS.md
   CLAUDE.md
   DEVELOPING.md
+  tools/
+    update_standards.py
   .agent/
     .gitattributes
     VERSION

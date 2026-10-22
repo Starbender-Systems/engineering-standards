@@ -50,6 +50,8 @@ class RepositoryBootstrapTests(unittest.TestCase):
         return result.stdout
 
     def assert_common_setup(self):
+        self.assertEqual((self.consumer / "tools/update_standards.py").read_bytes(),
+                         (ROOT / "tools/update_standards.py").read_bytes())
         for name in ("AGENTS.md", "CLAUDE.md", "DEVELOPING.md"):
             self.assertEqual((self.consumer / name).read_bytes(), (ROOT / "templates" / name).read_bytes())
         for directory in ("templates/.github", "templates/repository-bootstrap/.agent"):

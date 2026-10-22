@@ -4,6 +4,14 @@ Guidance releases follow the [versioning policy](README.md#versioning): patches 
 
 ## Unreleased
 
+## 0.3.0 - 2026-10-22
+
+- Add the standalone `tools/update_standards.py` consumer command and root `update.py` entry point. Resolve the latest published stable GitHub release by default, or choose a specific release with `--version` or a clean offline checkout with `--source`. Online updates require Git and an authenticated GitHub CLI; the Python implementation uses only the standard library and supports Python 3.11+.
+- Validate the source and synchronize twice plus a drift check in a staging directory before changing consumer files. Update the manifest release and managed snapshot while preserving selections and scopes, report the source commit, and reject locally edited/missing snapshot files, unknown shared files, unsafe paths, incompatible inputs, and automatic downgrades.
+- Support `--check` without changing consumer files or modification times: exit `1` when an update is available, `0` when current, and `2` on errors. Restore files already changed on handled write failures; process termination or machine failure still requires restoring the prior committed snapshot before retrying.
+- Install the helper through the common bootstrap for both repository and library types, extend bootstrap/validator coverage, and document initial adoption and updates. Add disposable-release tests for latest-release discovery, selection/ownership preservation, standalone execution, read-only checks, repeat runs, rollback, and failure/path boundaries.
+- Set source and bootstrap release metadata to 0.3.0. The manifest schema remains `1` and synchronized scopes are unchanged. Existing consumers keep their pins until explicitly updated and can copy the helper once or run the root command from a 0.3.0 checkout. Adapters, tools, and plugin versions remain locally owned; synchronization does not install or refresh the helper or plugins, and the updater does not commit, push, or publish. See the [upgrade notes](README.md#upgrading-from-020-to-030).
+
 ## 0.2.0 - 2026-10-21
 
 - Expand Python guidance with practical style, typing, API/data contracts, mutable-state isolation, errors/cleanup, I/O, packaging, concurrency, and validation. Add a portable engineering skill and thin path adapter to the catalog, bootstrap, and validator inventory. Existing Python selections receive the expanded standard and linked skill through dependency closure on reviewed synchronization. Existing consumers can review/merge the locally owned path adapter separately. Runtime versions, tools, and frameworks remain local choices.
