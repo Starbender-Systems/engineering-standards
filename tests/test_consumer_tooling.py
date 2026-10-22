@@ -286,6 +286,107 @@ class ConsumerToolingTests(unittest.TestCase):
         self.assertTrue(next(output.glob("*-preview.zip")).is_file())
         self.assertTrue(json.loads((output / "provenance.json").read_bytes())["preview"])
 
+    def test_agent_bundles_share_guidance_and_have_native_metadata(self):
+        self.bootstrap()
+        self.populate()
+        self.commit()
+        before = inventory(self.library)
+        api = self.api_inventory()
+        common = None
+        for agent in ("codex", "claude", "copilot", "all"):
+            with self.subTest(agent=agent):
+                archives = []
+                for attempt in range(2):
+                    output = self.directory / f"{agent}-{attempt}"
+                    self.run_consumer("bundle", "--agent", agent, "--output", output, "--inventory", api)
+                    archive = next(output.glob("*.zip"))
+                    suffix = "" if agent == "codex" else f"-{agent}"
+                    self.assertEqual(archive.name, f"example-consumer-0.1.0{suffix}.zip")
+                    archives.append(archive.read_bytes())
+                    with zipfile.ZipFile(archive) as zipped:
+                        files = {p: zipped.read(p) for p in zipped.namelist()}
+                    check_links(files)
+                    provenance = json.loads((output / "provenance.json").read_bytes())
+                    expected_agents = ["codex", "claude", "copilot"] if agent == "all" else [agent]
+                    self.assertEqual(provenance["agents"], expected_agents)
+                    prefix = "plugins/example-consumer/"
+                    references = prefix + "skills/example-consumer/references/"
+                    self.assertEqual(files[references + "provenance.json"],
+                                     (output / "provenance.json").read_bytes())
+                    for path, sha in provenance["files"].items():
+                        self.assertEqual(hashlib.sha256(files[path]).hexdigest(), sha)
+                    guidance = {p: data for p, data in files.items()
+                                if "/skills/" in p and not p.endswith("/provenance.json")}
+                    if common is None:
+                        common = guidance
+                    self.assertEqual(guidance, common)
+                    self.assertIn(references + "api/inventory.json", files)
+                    for host, marketplace_path in (
+                            ("codex", MARKETPLACE), ("claude", ".claude-plugin/marketplace.json"),
+                            ("copilot", ".github/plugin/marketplace.json")):
+                        self.assertEqual(marketplace_path in files, host in expected_agents)
+                        if host in expected_agents and host != "codex":
+                            marketplace = json.loads(files[marketplace_path])
+                            self.assertEqual(marketplace["name"], "example-tooling")
+                            self.assertEqual(marketplace["owner"], {"name": "Example Library"})
+                            self.assertEqual(marketplace["plugins"][0]["source"], "./plugins/example-consumer")
+                    self.assertEqual(prefix + "plugin.json" in files, agent != "claude")
+                    self.assertEqual(prefix + ".claude-plugin/plugin.json" in files,
+                                     agent in ("claude", "all"))
+                    if agent in ("claude", "all"):
+                        manifest = json.loads(files[prefix + ".claude-plugin/plugin.json"])
+                        self.assertEqual(manifest, {
+                            "name": "example-consumer", "version": "0.1.0",
+                            "description": "Discover and integrate Example Library capabilities in consuming applications.",
+                            "repository": "https://example.com/team/library",
+                            "author": {"name": "Example Library"},
+                        })
+                    extracted = self.directory / f"extracted-{agent}-{attempt}"
+                    with zipfile.ZipFile(archive) as zipped:
+                        zipped.extractall(extracted)
+                    check_links({p.relative_to(extracted).as_posix(): p.read_bytes()
+                                 for p in extracted.rglob("*") if p.is_file()})
+                self.assertEqual(archives[0], archives[1])
+        self.assertEqual(inventory(self.library), before)
+
+    def test_native_adapter_collisions_are_rejected_before_output(self):
+        self.bootstrap()
+        self.populate()
+        path = self.library / "plugins/example-consumer/.claude-plugin/plugin.json"
+        path.parent.mkdir()
+        path.write_text("{}", encoding="utf-8")
+        for agent in ("codex", "claude", "copilot", "all"):
+            with self.subTest(agent=agent):
+                output = self.directory / agent
+                self.assertIn("Generated agent adapter would overwrite", self.run_consumer(
+                    "bundle", "--agent", agent, "--output", output, "--allow-dirty-preview", code=2))
+                self.assertFalse(output.exists())
+
+    def test_preview_and_release_guards_apply_to_each_new_agent(self):
+        self.bootstrap()
+        self.commit()
+        for agent in ("claude", "copilot", "all"):
+            with self.subTest(agent=agent):
+                output = self.directory / agent
+                self.assertIn("Add packages and capabilities", self.run_consumer(
+                    "bundle", "--agent", agent, "--output", output, code=2))
+                self.assertFalse(output.exists())
+                self.run_consumer("bundle", "--agent", agent, "--output", output, "--allow-dirty-preview")
+                self.assertTrue(next(output.glob(f"*-{agent}-preview.zip")).is_file())
+                self.assertTrue(json.loads((output / "provenance.json").read_bytes())["preview"])
+
+    def test_target_specific_broken_links_fail_before_output(self):
+        self.bootstrap()
+        page = self.library / "docs/consumers/index.md"
+        page.write_text("[root manifest](../../../plugin.json)\n", encoding="utf-8")
+        # The link exists in the combined layout, but Claude uses its native manifest instead.
+        self.run_consumer()
+        self.commit()
+        output = self.directory / "claude"
+        self.assertIn("nonportable local link", self.run_consumer(
+            "bundle", "--agent", "claude", "--output", output, "--allow-dirty-preview", code=2))
+        self.assertFalse(output.exists())
+
     def test_dirty_or_wrong_ref_release_fails_before_output_creation(self):
         self.bootstrap()
         self.populate()

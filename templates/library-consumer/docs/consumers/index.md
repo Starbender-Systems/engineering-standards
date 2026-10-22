@@ -4,4 +4,4 @@ This catalog routes application needs to reusable library capabilities. Start wi
 
 The initial catalog is intentionally empty. Maintainers need to add real package IDs, exact versions, and capability routes before producing a release bundle. The declared library ref is `{{library_ref}}`; bundle provenance records the resolved source commit. Plugin version `{{plugin_version}}` is independent of library package versions.
 
-The generated plugin is consumer guidance. It does not install packages, change application instructions, or provide library-maintenance rules. See [maintenance](maintenance.md) for validation and packaging.
+The generated plugin supplies the same consumer guidance to Codex, Claude Code, and GitHub Copilot. It does not install packages, change application instructions, or provide library-maintenance rules. See [maintenance](maintenance.md) for validation and packaging targets.

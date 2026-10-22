@@ -73,7 +73,7 @@ The consumer manifest's release must exactly match the local checkout. Selection
 
 ### Optional library consumer tooling
 
-Use `bootstrap.py --type library` as above for the common setup plus a consumer catalog, integration skill/plugin, validation workflow, and standalone packaging tool. For a library that already has customized baseline instructions, [the library tooling guide](docs/library-consumer-tooling.md) also documents the add-on-only `tools/bootstrap_library.py` command. Generated files are locally owned; standards sync does not install, overwrite, or publish a plugin. Existing consumers need no manifest changes. The starter catalog is empty until maintainers document actual library capabilities.
+Use `bootstrap.py --type library` as above for the common setup plus a consumer catalog, integration skill/plugin, validation workflow, and standalone packaging tool. Build plugins for Codex, Claude Code, or GitHub Copilot with `consumer_tooling.py bundle --agent codex|claude|copilot`; `--agent all` builds one combined archive from the same skill and references. Omitting `--agent` retains the Codex default. For a library that already has customized baseline instructions, [the library tooling guide](docs/library-consumer-tooling.md) also documents the add-on-only `tools/bootstrap_library.py` command. Generated files are locally owned; standards sync does not install, overwrite, or publish a plugin. Existing consumers need no manifest changes. The starter catalog is empty until maintainers document actual library capabilities.
 
 ## Manifest contract and ownership
 

@@ -26,7 +26,7 @@ jobs:
       - name: Validate catalog and portable links
         run: python tools/consumer_tooling.py validate .
       - name: Assemble review preview
-        run: python tools/consumer_tooling.py bundle . --output "${{ runner.temp }}/consumer-tooling" --allow-dirty-preview
+        run: python tools/consumer_tooling.py bundle . --agent all --output "${{ runner.temp }}/consumer-tooling" --allow-dirty-preview
       - uses: actions/upload-artifact@v4
         with:
           name: '{{plugin_name}}-preview'

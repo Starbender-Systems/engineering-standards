@@ -4,6 +4,9 @@ Guidance releases follow the [versioning policy](README.md#versioning): patches 
 
 ## Unreleased
 
+- Require every commit message to include a concise title and a nonempty summary body explaining what changed and why, with relevant validation or compatibility details; route feature development through the Git standard. This is a proposed minor guidance requirement for the next release.
+- Add Claude Code and GitHub Copilot plugin build targets plus a combined bundle, deriving native manifests and marketplaces from one shared skill/metadata source; retain the default Codex command and archive name, record target agents in provenance, and generate combined CI previews. Existing library owners can review/copy the standalone runtime and template updates without changing snapshot manifests or release pins.
+- Add opt-in native CLI acceptance tests for individual and combined plugins using disposable configuration/cache directories; verify strict Claude validation, marketplace registration, installation, enabled status, skill discovery, and uninstall. Include native attribution and marketplace descriptions to pass Claude's strict checks without warnings; verify with Claude Code 2.1.302 and Copilot CLI 1.0.102 on Windows.
 - Add root `bootstrap.py` with a common repository setup and a library type that composes the common setup with consumer tooling; preflight the complete plan before writing and support read-only checks and identical reruns.
 - Share snapshot rendering with synchronization and preserve snapshot bytes through a locally owned bootstrap `.agent/.gitattributes` file.
 - Add an optional library-consumer bootstrap profile with locally owned discovery catalogs, integration recipe guidance, portable plugin/skill metadata, and a preview CI workflow.
