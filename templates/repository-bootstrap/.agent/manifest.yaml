@@ -3,6 +3,7 @@
   "release": "0.1.0",
   "standards": [
     "architecture",
+    "cpp",
     "csharp",
     "dependencies",
     "documentation",
@@ -27,6 +28,7 @@
     "release"
   ],
   "skills": [
+    "sb-cpp-engineering",
     "sb-dotnet-engineering",
     "sb-kicad-engineering",
     "sb-repository-maintenance"
