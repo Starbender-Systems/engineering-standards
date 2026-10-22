@@ -6,6 +6,8 @@
 
 Firmware and software interacting with physical hardware.
 
+For C++ firmware, also read the [C++ standard](cpp.md) for language, ownership, interface, and portability guidance.
+
 ## Rules
 
 - MUST identify board revision, toolchain, memory constraints, and relevant hardware interfaces before changing firmware.

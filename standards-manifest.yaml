@@ -3,6 +3,7 @@
   "release": "0.1.0",
   "standards": {
     "architecture": "standards/architecture.md",
+    "cpp": "standards/cpp.md",
     "csharp": "standards/csharp.md",
     "dependencies": "standards/dependencies.md",
     "documentation": "standards/documentation.md",
@@ -27,12 +28,14 @@
     "release": "workflows/release.md"
   },
   "skills": {
+    "sb-cpp-engineering": "skills/sb-cpp-engineering/SKILL.md",
     "sb-dotnet-engineering": "skills/sb-dotnet-engineering/SKILL.md",
     "sb-kicad-engineering": "skills/sb-kicad-engineering/SKILL.md",
     "sb-repository-maintenance": "skills/sb-repository-maintenance/SKILL.md"
   },
   "templates": [
     "templates/.github/copilot-instructions.md",
+    "templates/.github/instructions/cpp.instructions.md",
     "templates/.github/instructions/database.instructions.md",
     "templates/.github/instructions/dotnet.instructions.md",
     "templates/.github/instructions/tests.instructions.md",

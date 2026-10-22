@@ -108,6 +108,18 @@ class ToolTests(unittest.TestCase):
                 self.assertFalse((self.consumer / ".agent/standards/python.md").exists())
                 self.sync("--check")
 
+    def test_cpp_routes_include_portable_guidance_without_unrelated_stacks(self):
+        for standards, skills in ((["cpp"], []), ([], ["sb-cpp-engineering"]), (["embedded"], [])):
+            with self.subTest(standards=standards, skills=skills):
+                self.edit_manifest(standards=standards, workflows=[], skills=skills)
+                self.sync()
+                for path in ("standards/cpp.md", "skills/sb-cpp-engineering/SKILL.md"):
+                    self.assertEqual((self.consumer / ".agent" / path).read_bytes(), (ROOT / path).read_bytes())
+                for unrelated in ("csharp", "dotnet", "kicad", "python"):
+                    self.assertFalse((self.consumer / f".agent/standards/{unrelated}.md").exists())
+                self.assertEqual((self.consumer / ".agent/standards/embedded.md").exists(), standards == ["embedded"])
+                self.sync("--check")
+
     def test_reduced_selection_prunes_only_unmodified_tracked_files(self):
         self.sync()
         self.edit_manifest(standards=[], workflows=[], skills=[])
