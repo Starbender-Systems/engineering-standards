@@ -10,7 +10,7 @@ Task acceptance criteria, repository instructions, current architecture, and run
 
 ## Implementation steps
 
-1. Read [general](../standards/general.md), [architecture](../standards/architecture.md), [testing](../standards/testing.md), and [documentation](../standards/documentation.md) guidance plus applicable stack standards.
+1. Read [general](../standards/general.md), [git](../standards/git.md), [architecture](../standards/architecture.md), [testing](../standards/testing.md), and [documentation](../standards/documentation.md) guidance plus applicable stack standards.
 2. Inspect current behavior and identify affected contracts and acceptance criteria.
 3. Implement the smallest coherent change and appropriate behavior checks.
 4. Update affected usage and design documentation; review the complete diff.
