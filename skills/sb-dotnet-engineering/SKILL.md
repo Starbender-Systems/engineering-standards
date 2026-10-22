@@ -15,11 +15,11 @@ Task acceptance criteria, repository AGENTS.md, development commands, SDK/target
 
 ## Standards and workflows
 
-[.NET](../../standards/dotnet.md), [feature development](../../workflows/feature-development.md), [defect investigation](../../workflows/defect-investigation.md), [code review](../../workflows/code-review.md), and [EF migration](../../workflows/ef-migration.md).
+[.NET](../../standards/dotnet.md), [C# conventions](../../standards/csharp.md) for C# changes, [feature development](../../workflows/feature-development.md), [defect investigation](../../workflows/defect-investigation.md), [code review](../../workflows/code-review.md), and [EF migration](../../workflows/ef-migration.md).
 
 ## Procedure
 
-1. Load repository and applicable path instructions, then the linked .NET standard.
+1. Load repository and applicable path instructions, then the linked .NET standard and C# conventions when working in C#.
 2. Choose the workflow matching the task; read additional standards referenced by that workflow.
 3. Inspect affected contracts and implement the change through the selected workflow.
 4. Use the migration workflow when changing the EF model or schema.

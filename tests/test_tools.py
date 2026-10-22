@@ -97,6 +97,17 @@ class ToolTests(unittest.TestCase):
         self.assertFalse((self.consumer / ".agent/standards/kicad.md").exists())
         self.sync("--check")
 
+    def test_dotnet_routes_include_portable_csharp_guidance(self):
+        for standards, skills in ((["dotnet"], []), ([], ["sb-dotnet-engineering"])):
+            with self.subTest(standards=standards, skills=skills):
+                self.edit_manifest(standards=standards, workflows=[], skills=skills)
+                self.sync()
+                conventions = self.consumer / ".agent/standards/csharp.md"
+                self.assertEqual(conventions.read_bytes(), (ROOT / "standards/csharp.md").read_bytes())
+                self.assertFalse((self.consumer / ".agent/standards/kicad.md").exists())
+                self.assertFalse((self.consumer / ".agent/standards/python.md").exists())
+                self.sync("--check")
+
     def test_reduced_selection_prunes_only_unmodified_tracked_files(self):
         self.sync()
         self.edit_manifest(standards=[], workflows=[], skills=[])

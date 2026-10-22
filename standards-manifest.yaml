@@ -3,6 +3,7 @@
   "release": "0.1.0",
   "standards": {
     "architecture": "standards/architecture.md",
+    "csharp": "standards/csharp.md",
     "dependencies": "standards/dependencies.md",
     "documentation": "standards/documentation.md",
     "dotnet": "standards/dotnet.md",
