@@ -4,6 +4,8 @@ This directory supplies the initial [.agent/manifest.yaml](.agent/manifest.yaml)
 
 ## One command for every repository type
 
+Configure GitHub hosting with the [repository setup workflow](../../workflows/github-repository-setup.md). Bootstrap installs local guidance only; it does not apply GitHub protections, permissions, environments, or secrets.
+
 Create or clone the target repository first, then run from the engineering-standards root with Python 3.11+ (on Windows, `py -3.12` is an example):
 
 ```text

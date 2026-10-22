@@ -15,7 +15,7 @@ Working tree state, local instructions, development commands, current snapshot m
 
 ## Standards and workflows
 
-[General](../../standards/general.md), [documentation](../../standards/documentation.md), [dependency update](../../workflows/dependency-update.md), [code review](../../workflows/code-review.md), and [release](../../workflows/release.md).
+[General](../../standards/general.md), [documentation](../../standards/documentation.md), [GitHub repository setup](../../workflows/github-repository-setup.md), [dependency update](../../workflows/dependency-update.md), [code review](../../workflows/code-review.md), and [release](../../workflows/release.md).
 
 ## Procedure
 

@@ -21,6 +21,7 @@
     "dependency-update",
     "ef-migration",
     "feature-development",
+    "github-repository-setup",
     "pcbway-release",
     "release"
   ],
