@@ -14,7 +14,7 @@ Repository administration access is needed for settings and protections; organiz
 
 ### 1. Record the configuration decisions
 
-Use this table as a starting profile, then record the repository owner's choices in the repository's development/contribution guide. Adapt the proposals to the project's needs and established organization policies.
+Use this table as a starting profile, then record the repository owner's choices in the repository's development/contribution guide. Adapt the proposals to the project's needs and established organization policies without weakening the required GitHub application baseline in the [Git standard](../standards/git.md#rules).
 
 | Concern | Starting profile and decision |
 | --- | --- |
@@ -26,7 +26,7 @@ Use this table as a starting profile, then record the repository owner's choices
 | Commit defaults | Prefer PR title and description for squash messages, with a meaningful PR summary. If using PR title and commit details instead, inspect the resulting body against the Git standard. |
 | Reviews | Start with one approval, stale approval dismissal, code-owner review, and resolved conversations on each integration/release branch. Confirm an eligible reviewer other than the author exists. |
 | Bypass | Decide whether protections include administrators and which emergency actors, if any, can bypass. Record their authority and recovery process. |
-| Checks | Name the actual required CI jobs after they have run. An enabled status-check option with an empty check list does not select a CI gate. |
+| Checks | For applications with .NET and controller code, require the distinct .NET and controller test checks on `main`. Name the actual CI jobs after they have run; an enabled status-check option with an empty check list does not select a CI gate. |
 | History | Consider linear history and block force pushes/deletions on protected branches. Decide signing and signoff separately; they are different controls. |
 | Branch cleanup | Decide automatic topic-branch deletion, automatic PR-head updates, and auto-merge. |
 | Security and Actions | Choose dependency/secret scanning, private reporting, allowed actions, fork approvals, and explicit token permissions. |
@@ -46,7 +46,9 @@ Review **Settings > General** for Issues, Projects, Discussions, Wiki, PR access
 
 In **Settings > Actions > General**, enable the approved action sources and select read-only default workflow permissions. Leave workflow PR creation/approval disabled unless an identified automation requires it; grant that automation only its needed permissions. Decide the fork-workflow approval policy based on the contribution model. Record whether action SHA pinning or an action allowlist is required.
 
-Add CI for every selected PR target branch. Give validation jobs stable, distinct names and run real build/test commands for the stack. Run a first validation PR so the checks exist before selecting them in protections. Do not treat a command that discovers no tests as evidence of tested behavior.
+For applications with .NET and controller code, add a GitHub Actions workflow whose `push` and `pull_request` events are not limited to selected paths or branches. The workflow must build the application and run the repository's real .NET and controller test commands as distinct, stably named checks. Both checks must produce a conclusive result for every push and pull request. Run a first validation PR so the checks exist before selecting them in protections. Do not treat a command that discovers no tests as evidence of tested behavior.
+
+For other stacks, add CI for every selected PR target branch. Give validation jobs stable, distinct names and run real build/test commands for the stack.
 
 Keep validation of untrusted PR code separate from publishing. Expose release credentials only to the intended trusted jobs/events. Audit each API call's token requirements: a merged-PR lookup may need `pull-requests: read` in addition to `contents: read`. Add only permissions the workflow uses, following [GitHub's token-permissions guidance](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication).
 
@@ -56,13 +58,15 @@ If a workflow has path filters, do not make its absent check a universal merge r
 
 Choose repository rulesets (**Settings > Rules > Rulesets**) or classic branch protection (**Settings > Branches**) and inspect inherited organization rules first. Record the effective rules, not just the repository-local entries; avoid accidental overlap between mechanisms.
 
-For each selected integration and release branch, configure the agreed PR, review, conversation, history, bypass, and push/deletion settings from step 1. Select actual status-check names and their expected GitHub App source where appropriate, and decide whether branches must be up to date. Verify that the required-check list is populated and that protections cover every intended integration and release branch.
+For applications with .NET and controller code, protect `main` with a ruleset or classic branch protection that requires a pull request and successful completion of the actual .NET and controller check names before merge. Configure any additional integration or release branches using the agreed PR, review, conversation, history, bypass, and push/deletion settings from step 1. Select the expected GitHub App source for required checks where appropriate, and decide whether branches must be up to date. Verify that the required-check list is populated and that protections cover every intended integration and release branch.
 
 Set squash/merge/rebase availability in **Settings > General > Pull Requests** consistently with the history policy. Configure the default squash message and review the generated title/body before merging under the [Git standard](../standards/git.md). The [GitHub squash settings guide](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests) explains the available title, description, and commit-detail options.
 
 Enable protections after initial content and CI are ready, and verify the chosen maintainer/reviewer model can satisfy them. Do not use an administrator bypass as evidence that ordinary contributor protections work.
 
 ### 5. Configure security and release environments
+
+Add `.github/dependabot.yml` for applications with .NET and controller code. Configure `nuget`, `npm`, and `github-actions` update entries for the directories and cadence used by the repository. Dependabot must open pull requests against a protected integration branch; do not configure an update path that bypasses the required .NET and controller checks before merge.
 
 In the repository's security settings, review dependency alerts and security updates, secret scanning and push protection, private vulnerability reporting, and any required code scanning. Select the controls available for the repository's visibility and plan, following the shared security standard. Update the security policy and issue-template contact link to the reporting mechanism actually enabled; do not assume a security policy file enables private reporting.
 
@@ -90,7 +94,7 @@ For the two-branch model, also inspect `branches/development/protection`. For ea
 
 ## Required validation
 
-Review effective settings and test an ordinary PR against each intended target branch. Verify eligible owners are requested; an unapproved PR, unresolved discussion, or failing required job blocks merge under the selected policy; passing checks and eligible reviews satisfy it. Include a docs-only PR to catch path-filtered checks that remain pending. Record what was inspected versus exercised; do not merge, deploy, publish, or weaken controls merely to finish this checklist without task authorization.
+Review effective settings and test an ordinary PR against each intended target branch. For the required application baseline, verify pushes and pull requests build the application and run both test suites, and verify `main` rejects changes without a pull request or while either the .NET or controller check is failing. Inspect Dependabot's NuGet, npm, and GitHub Actions entries and confirm its pull requests target a protected branch governed by those checks. Verify eligible owners are requested; an unapproved PR, unresolved discussion, or failing required job blocks merge under the selected policy; passing checks and eligible reviews satisfy it. Include a docs-only PR to confirm both required checks still conclude. Record what was inspected versus exercised; do not merge, deploy, publish, or weaken controls merely to finish this checklist without task authorization.
 
 Check the contribution guide, default PR target, access setting, and branch protection agree. Inspect workflow job permissions, publish conditions, and environment references. Review the generated squash title/body without performing a release. Validate the engineering snapshot, local commands, and links using the repository's established tooling.
 

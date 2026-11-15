@@ -4,6 +4,8 @@ Guidance releases follow the [versioning policy](README.md#versioning): patches 
 
 ## Unreleased
 
+- Require GitHub-hosted applications with .NET and controller code to build and run distinct .NET and controller test checks on every push and pull request, protect `main` with pull-request and passing-check requirements, and configure Dependabot pull requests for NuGet, npm, and GitHub Actions updates.
+
 ## 0.3.0 - 2026-10-22
 
 - Add the standalone `tools/update_standards.py` consumer command and root `update.py` entry point. Resolve the latest published stable GitHub release by default, or choose a specific release with `--version` or a clean offline checkout with `--source`. Online updates require Git and an authenticated GitHub CLI; the Python implementation uses only the standard library and supports Python 3.11+.
